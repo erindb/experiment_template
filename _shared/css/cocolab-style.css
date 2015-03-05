@@ -93,6 +93,10 @@ textarea {
 	float: right;
 }
 
+.thin {
+	height: 50px;
+}
+
 .slider_target {
 	text-align: right;
 }
@@ -110,6 +114,12 @@ textarea {
 .slider {
 	width: 400;
 	margin: 10px;
+}
+
+.vertical_slider {
+	width: 10px;
+	height: 300px;
+	margin: 10px auto;
 }
 
 /* Progress Bar */

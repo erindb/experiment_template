@@ -149,6 +149,90 @@ function make_slides(f) {
     },
   });
 
+  slides.vertical_sliders = slide({
+    name : "vertical_sliders",
+    present : _.shuffle([
+      {
+        "bins" : [
+          {
+            "min" : 0,
+            "max" : 10
+          },
+          {
+            "min" : 10,
+            "max" : 20
+          },
+          {
+            "min" : 20,
+            "max" : 30
+          },
+          {
+            "min" : 30,
+            "max" : 40
+          },
+          {
+            "min" : 40,
+            "max" : 50
+          },
+          {
+            "min" : 50,
+            "max" : 60
+          }
+        ],
+        "question": "How tall is tall?"
+      }
+    ]),
+    present_handle : function(stim) {
+      $(".err").hide();
+      this.stim = stim;
+
+      $("#vertical_question").html(stim.question);
+
+      var bin_labels = "<td></td>";
+      var sliders_and_top_label = "<td class='thin'>likely</td>";
+      for (var i=0; i<stim.bins.length; i++) {
+        bin_labels += "<td class='bin_label'>" + stim.bins[i].min + " - " + stim.bins[i].max + "</td>";
+        sliders_and_top_label += "<td rowspan='3'><div id='vslider" + i + "' class='vertical_slider'>|</div></td>";
+      }
+      $("#sliders_and_top_label").html(sliders_and_top_label);
+      $("#bin_labels").html(bin_labels);
+
+      this.init_sliders(stim);
+      exp.sliderPost = [];
+    },
+
+    button : function() {
+      if (exp.sliderPost.length < this.n_sliders) {
+        $(".err").show();
+      } else {
+        this.log_responses();
+        _stream.apply(this); //use _stream.apply(this); if and only if there is "present" data.
+      }
+    },
+
+    init_sliders : function(stim) {
+      for (var i=0; i<stim.bins.length; i++) {
+        utils.make_slider("#vslider" + i, this.make_slider_callback(i), "vertical");
+      }
+    },
+    make_slider_callback : function(i) {
+      return function(event, ui) {
+        exp.sliderPost[i] = ui.value;
+      };
+    },
+    log_responses : function() {
+      for (var i=0; i<this.stim.bins.length; i++) {
+        exp.data_trials.push({
+          "trial_type" : "vertical_slider",
+          "question" : this.stim.question,
+          "response" : exp.sliderPost[i],
+          "min" : this.stim.bins[i].min,
+          "max" : this.stim.bins[i].max
+        });
+      }
+    },
+  });
+
   slides.subj_info =  slide({
     name : "subj_info",
     submit : function(e){
@@ -198,7 +282,7 @@ function init() {
       screenUW: exp.width
     };
   //blocks of the experiment:
-  exp.structure=["i0", "instructions", "single_trial", "one_slider", "multi_slider", 'subj_info', 'thanks'];
+  exp.structure=["i0", "instructions", "single_trial", "one_slider", "multi_slider", "vertical_sliders", 'subj_info', 'thanks'];
   
   exp.data_trials = [];
   //make corresponding slides:
