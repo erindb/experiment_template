@@ -99,9 +99,12 @@ textarea {
 
 .top {
 	top: 0%;
+	position: relative;
 }
 .bottom {
-	bottom: 100%;
+	top: 100%;
+	position: relative;
+	transform: translateY(-200%);
 }
 
 .slider_target {
