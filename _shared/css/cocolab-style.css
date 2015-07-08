@@ -97,6 +97,13 @@ textarea {
 	height: 50px;
 }
 
+.top {
+	top: 0%;
+}
+.bottom {
+	bottom: 100%;
+}
+
 .slider_target {
 	text-align: right;
 }
@@ -120,6 +127,10 @@ textarea {
 	width: 10px;
 	height: 300px;
 	margin: 10px auto;
+}
+
+#slider_endpoint_labels {
+	height: 300px;
 }
 
 /* Progress Bar */

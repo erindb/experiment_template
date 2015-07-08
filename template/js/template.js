@@ -188,14 +188,18 @@ function make_slides(f) {
 
       $("#vertical_question").html(stim.question);
 
-      var bin_labels = "<td></td>";
-      var sliders_and_top_label = "<td class='thin'>likely</td>";
       for (var i=0; i<stim.bins.length; i++) {
-        bin_labels += "<td class='bin_label'>" + stim.bins[i].min + " - " + stim.bins[i].max + "</td>";
-        sliders_and_top_label += "<td rowspan='3'><div id='vslider" + i + "' class='vertical_slider'>|</div></td>";
+        $("#sliders").append("<td><div id='vslider" + i + "' class='vertical_slider'>|</div></td>");
+        $("#bin_labels").append("<td class='bin_label'>" + stim.bins[i].min + " - " + stim.bins[i].max + "</td>");
       }
-      $("#sliders_and_top_label").html(sliders_and_top_label);
-      $("#bin_labels").html(bin_labels);
+
+      // var sliders_and_top_label = "<td class='thin'>likely</td>";
+      // for (var i=0; i<stim.bins.length; i++) {
+      //   bin_labels += "<td class='bin_label'>" + stim.bins[i].min + " - " + stim.bins[i].max + "</td>";
+      //   sliders_and_top_label += "<td rowspan='3'><div id='vslider" + i + "' class='vertical_slider'>|</div></td>";
+      // }
+      // $("#sliders_and_top_label").html(sliders_and_top_label);
+      // $("#bin_labels").html(bin_labels);
 
       this.init_sliders(stim);
       exp.sliderPost = [];
@@ -282,7 +286,7 @@ function init() {
       screenUW: exp.width
     };
   //blocks of the experiment:
-  exp.structure=["i0", "instructions", "single_trial", "one_slider", "multi_slider", "vertical_sliders", 'subj_info', 'thanks'];
+  exp.structure=["vertical_sliders","i0", "instructions", "single_trial", "one_slider", "multi_slider", "vertical_sliders", 'subj_info', 'thanks'];
   
   exp.data_trials = [];
   //make corresponding slides:
