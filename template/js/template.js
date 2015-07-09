@@ -187,19 +187,13 @@ function make_slides(f) {
       this.stim = stim;
 
       $("#vertical_question").html(stim.question);
-
+      
+      $("#sliders").empty();
+      $("#bin_labels").empty();
       for (var i=0; i<stim.bins.length; i++) {
         $("#sliders").append("<td><div id='vslider" + i + "' class='vertical_slider'>|</div></td>");
         $("#bin_labels").append("<td class='bin_label'>" + stim.bins[i].min + " - " + stim.bins[i].max + "</td>");
       }
-
-      // var sliders_and_top_label = "<td class='thin'>likely</td>";
-      // for (var i=0; i<stim.bins.length; i++) {
-      //   bin_labels += "<td class='bin_label'>" + stim.bins[i].min + " - " + stim.bins[i].max + "</td>";
-      //   sliders_and_top_label += "<td rowspan='3'><div id='vslider" + i + "' class='vertical_slider'>|</div></td>";
-      // }
-      // $("#sliders_and_top_label").html(sliders_and_top_label);
-      // $("#bin_labels").html(bin_labels);
 
       this.init_sliders(stim);
       exp.sliderPost = [];

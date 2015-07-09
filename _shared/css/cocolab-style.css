@@ -136,6 +136,10 @@ textarea {
 	height: 300px;
 }
 
+.bin_label{
+	text-align: center;
+}
+
 /* Progress Bar */
 .progress{
   position: absolute;
