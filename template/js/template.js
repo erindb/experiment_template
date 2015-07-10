@@ -191,7 +191,15 @@ function make_slides(f) {
       $("#sliders").empty();
       $("#bin_labels").empty();
 
-      this.n_sliders = stims.bins.length
+      $("#sliders").append('<td> \
+            <div id="slider_endpoint_labels"> \
+              <div class="top">likely</div> \
+              <div class="bottom">unlikely</div>\
+            </div>\
+          </td>')
+      $("#bin_labels").append('<td></td>')
+
+      this.n_sliders = stims.bins.length;
       for (var i=0; i<stim.bins.length; i++) {
         $("#sliders").append("<td><div id='vslider" + i + "' class='vertical_slider'>|</div></td>");
         $("#bin_labels").append("<td class='bin_label'>" + stim.bins[i].min + " - " + stim.bins[i].max + "</td>");
