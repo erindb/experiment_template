@@ -199,7 +199,7 @@ function make_slides(f) {
           </td>')
       $("#bin_labels").append('<td></td>')
 
-      this.n_sliders = stims.bins.length;
+      this.n_sliders = stim.bins.length;
       for (var i=0; i<stim.bins.length; i++) {
         $("#sliders").append("<td><div id='vslider" + i + "' class='vertical_slider'>|</div></td>");
         $("#bin_labels").append("<td class='bin_label'>" + stim.bins[i].min + " - " + stim.bins[i].max + "</td>");
