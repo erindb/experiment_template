@@ -187,7 +187,7 @@ function make_slides(f) {
       this.stim = stim;
 
       $("#vertical_question").html(stim.question);
-      
+
       $("#sliders").empty();
       $("#bin_labels").empty();
 
@@ -253,6 +253,8 @@ function make_slides(f) {
         gender : $("#gender").val(),
         education : $("#education").val(),
         comments : $("#comments").val(),
+        problems: $("#problems").val(),
+        fairprice: $("#fairprice").val()
       };
       exp.go(); //use exp.go() if and only if there is no "present" data.
     }
@@ -291,7 +293,7 @@ function init() {
     };
   //blocks of the experiment:
   exp.structure=["i0", "instructions", "single_trial", "one_slider", "multi_slider", "vertical_sliders", 'subj_info', 'thanks'];
-  
+
   exp.data_trials = [];
   //make corresponding slides:
   exp.slides = make_slides(exp);
