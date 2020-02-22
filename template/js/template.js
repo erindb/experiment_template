@@ -299,6 +299,26 @@ function init() {
       }
   })();
 
+  // Extra check for US IP addresses
+  // TO DO: add support for Canadian IP addresses
+  function USOnly() {
+    var accessKey = 'b487843addca6e9ec32e6ae28aeaa022';
+    $.ajax({
+      url: 'https://api.ipstack.com/check?access_key='+accessKey,
+      dataType: 'jsonp',
+      success: function(json) {
+        if (json.country_code != 'US') {
+          var slides = document.getElementsByClassName('slide');
+          for (i=0; i<slides.length; i++) {
+            slides[i].style.display = 'none';
+          }
+          document.getElementsByClassName('progress')[0].style.display = 'none';
+          document.getElementById('unique').innerText = "This HIT is only available to workers in the United States. Please click 'Return' to avoid any impact on your approval rating.";
+        }
+      }
+    });
+  }
+
   exp.trials = [];
   exp.catch_trials = [];
   exp.condition = _.sample(["CONDITION 1", "condition 2"]); //can randomize between subject conditions here
@@ -334,4 +354,5 @@ function init() {
   });
 
   exp.go(); //show first slide
+  USOnly(); // check US IP address
 }
