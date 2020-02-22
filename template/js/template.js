@@ -85,7 +85,7 @@ function make_slides(f) {
         "RT": this.RT,
         "subject": this.stim.subject,
         "object": this.stim.object,
-        "response" : exp.sliderPost,
+        "response" : exp.sliderPost
       });
       this.trial_num++
     }
