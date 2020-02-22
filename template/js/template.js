@@ -286,6 +286,19 @@ function make_slides(f) {
 
 /// init ///
 function init() {
+
+  //; support for uniqueturker
+  // https://uniqueturker.myleott.com
+  repeatWorker = false;
+  (function(){
+      var ut_id = "[INSERT uniqueTurkerID]";
+      if (UTWorkerLimitReached(ut_id)) {
+        $('.slide').empty();
+        repeatWorker = true;
+        alert("You have already completed the maximum number of HITs allowed by this requester. Please click 'Return HIT' to avoid any impact on your approval rating.");
+      }
+  })();
+
   exp.trials = [];
   exp.catch_trials = [];
   exp.condition = _.sample(["CONDITION 1", "condition 2"]); //can randomize between subject conditions here
