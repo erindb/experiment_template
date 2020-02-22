@@ -281,6 +281,73 @@ function make_slides(f) {
     }
   });
 
+  // simple language comprehension check to include at beginning of experiment
+  slides.botcaptcha = slide({
+     name : "botcaptcha",
+     bot_trials : 0,
+     start: function() {
+       $("#error").hide();
+       $("#error_incorrect").hide();
+       $("#error_2more").hide();
+       $("#error_1more").hide();
+       // list of speaker names to be sampled from
+       speaker = _.sample(["James", "John", "Robert", "Michael", "William", "David", "Richard", "Joseph", "Thomas", "Charles"]);
+       // list of listener names to be sampled from
+       listener = _.sample(["Mary", "Patricia", "Jennifer", "Linda", "Elizabeth", "Barbara", "Susan", "Jessica", "Sarah", "Margaret"]);
+       // create the utterance
+       this.bot_utterance = speaker + " says to " + listener + ": It's a beautiful day, isn't it?"
+       // creat ethe question
+       this.bot_question = "Who is " + speaker + " talking to?"
+       // append the utterance and the question to the view
+       var bot_sentence = document.createElement("p");
+       var bot_question = document.createElement("p");
+       var content = document.createTextNode(this.bot_utterance);
+       var q_content = document.createTextNode(this.bot_question);
+       bot_sentence.name = "bot_sentence";
+       bot_question.name = "bot_question";
+       bot_sentence.appendChild(content);
+       bot_question.appendChild(q_content);
+       document.getElementById('bot_context').appendChild(bot_sentence);
+       document.getElementById('bot_context').appendChild(document.createElement("br"));
+       document.getElementById('bot_context').appendChild(bot_question);
+       document.getElementById('bot_context').appendChild(document.createElement("br"));
+
+     },
+     button: function() {
+       // get the participants' input
+       bot_response = $("#botresponse").val();
+       // append data if response correct
+       if (bot_response.toLowerCase() == listener.toLowerCase()) {
+         exp.catch_trials.push({
+           condition: "botcaptcha",
+           n_fails: this.bot_trials,
+           response: bot_response,
+           bot_sentence: this.bot_utterance,
+           bot_question: this.bot_question
+         });
+         exp.go();
+         // gives participant two more trials if the response was incorrect
+       } else {
+         this.bot_trials++;
+         $("#error_incorrect").show();
+         if (this.bot_trials == 1) {
+             $("#error_2more").show();
+         } else if (this.bot_trials == 2) {
+             $("#error_2more").hide();
+             $("#error_1more").show();
+         } else {
+           // if participant fails, they cannot proceed
+             $("#error_incorrect").hide();
+             $("#error_1more").hide();
+             $("#bot_button").hide();
+             $('#botresponse').prop("disabled", true);
+             $("#error").show();
+         };
+       }
+     }
+  });
+
+
   return slides;
 }
 
@@ -299,26 +366,6 @@ function init() {
       }
   })();
 
-  // Extra check for US IP addresses
-  // TO DO: add support for Canadian IP addresses
-  function USOnly() {
-    var accessKey = 'b487843addca6e9ec32e6ae28aeaa022';
-    $.ajax({
-      url: 'https://api.ipstack.com/check?access_key='+accessKey,
-      dataType: 'jsonp',
-      success: function(json) {
-        if (json.country_code != 'US') {
-          var slides = document.getElementsByClassName('slide');
-          for (i=0; i<slides.length; i++) {
-            slides[i].style.display = 'none';
-          }
-          document.getElementsByClassName('progress')[0].style.display = 'none';
-          document.getElementById('unique').innerText = "This HIT is only available to workers in the United States. Please click 'Return' to avoid any impact on your approval rating.";
-        }
-      }
-    });
-  }
-
   exp.trials = [];
   exp.catch_trials = [];
   exp.condition = _.sample(["CONDITION 1", "condition 2"]); //can randomize between subject conditions here
@@ -332,7 +379,17 @@ function init() {
     };
 
   //blocks of the experiment:
-  exp.structure=["i0", "instructions", "single_trial", "one_slider", "multi_slider", "vertical_sliders", 'subj_info', 'thanks'];
+  exp.structure=[
+    "i0",
+    // "botcaptcha",
+    "instructions",
+    "single_trial",
+    "one_slider",
+    "multi_slider",
+    "vertical_sliders",
+    "subj_info",
+    "thanks"
+  ];
 
   exp.data_trials = [];
   //make corresponding slides:
@@ -352,6 +409,27 @@ function init() {
       exp.go();
     }
   });
+
+
+  // Extra check for US IP addresses
+  // TO DO: add support for Canadian IP addresses
+  function USOnly() {
+    var accessKey = 'b487843addca6e9ec32e6ae28aeaa022';
+     $.ajax({
+       url: 'https://geo.ipify.org/api/v1?apiKey=at_nuIzsEIQJAft6sr1WH67UTfFDeMIO',
+       dataType: 'jsonp',
+       success: function(json) {
+       if (json.location.country != 'US') {
+         var slides = document.getElementsByClassName('slide');
+         for (i=0; i<slides.length; i++) {
+          slides[i].style.display = 'none';
+         }
+          document.getElementsByClassName('progress')[0].style.display = 'none';
+          document.getElementById('unique').innerText = "This HIT is only available to workers in the United States. Please click 'Return' to avoid any impact on your approval rating.";
+        }
+      }
+     });
+  }
 
   exp.go(); //show first slide
   USOnly(); // check US IP address
