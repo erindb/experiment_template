@@ -37,6 +37,7 @@ function make_slides(f) {
 
   slides.one_slider = slide({
     name : "one_slider",
+    trial_num: 1, // counter to record trial number within block
 
     /* trial information for this block
      (the variable 'stim' will change between each of these values,
@@ -50,9 +51,8 @@ function make_slides(f) {
     //this gets run only at the beginning of the block
     present_handle : function(stim) {
       $(".err").hide();
-
       this.stim = stim; //I like to store this information in the slide so I can record it later.
-
+      this.startTime = Date.now();
 
       $(".prompt").html(stim.subject + "s like " + stim.object + "s.");
       this.init_sliders();
@@ -63,6 +63,7 @@ function make_slides(f) {
       if (exp.sliderPost == null) {
         $(".err").show();
       } else {
+        this.RT = (Date.now() - this.startTime) / 1000; // record time spent on trial
         this.log_responses();
 
         /* use _stream.apply(this); if and only if there is
@@ -80,8 +81,13 @@ function make_slides(f) {
     log_responses : function() {
       exp.data_trials.push({
         "trial_type" : "one_slider",
-        "response" : exp.sliderPost
+        "trial_num": this.trial_num,
+        "RT": this.RT,
+        "subject": this.stim.subject,
+        "object": this.stim.object,
+        "response" : exp.sliderPost,
       });
+      this.trial_num++
     }
   });
 
@@ -291,6 +297,7 @@ function init() {
       screenW: screen.width,
       screenUW: exp.width
     };
+
   //blocks of the experiment:
   exp.structure=["i0", "instructions", "single_trial", "one_slider", "multi_slider", "vertical_sliders", 'subj_info', 'thanks'];
 
